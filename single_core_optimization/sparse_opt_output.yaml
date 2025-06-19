@@ -1,0 +1,104 @@
+# template.j2
+
+sparse_optimizations:
+  targets:
+    
+    - name: GlobelBuffer
+      
+      representation-format:
+        data-spaces:
+          
+            - name: Inputs
+              ranks:
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: CP
+                
+                  - format: B
+                
+                  - format: CP
+                
+                  - format: B
+                
+          
+            - name: Weights
+              ranks:
+                
+                  - format: B
+                
+                  - format: CP
+                
+                  - format: B
+                
+                  - format: B
+                
+                  - format: CP
+                
+                  - format: B
+                
+                  - format: B
+                
+                  - format: B
+                
+          
+      
+    
+    - name: PE_buffer
+      
+      representation-format:
+        data-spaces:
+          
+            - name: Inputs
+              ranks:
+                
+                  - format: B
+                
+          
+            - name: Weights
+              ranks:
+                
+                  - format: B
+                
+                  - format: B
+                
+          
+      
+    
+
+    
+    - name: GlobelBuffer
+      action-optimization:
+            - type: gating
+              options:
+                  - target: Inputs
+                    condition-on: [ Weights ]
+    
+
+    
+
+    
+    - name: PE_buffer
+      action-optimization:
+            - type: skipping
+              options:
+                  - target: Inputs
+                    condition-on: [ Weights ]
+    
+
+
+    
+
+

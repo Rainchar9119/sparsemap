@@ -1,0 +1,28 @@
+mapping:
+  - target: DRAM
+    type: temporal
+    permutation: SQCMRNP
+    factors: C=1 M=1 N=1 P=1 Q=3 R=1 S=2
+  
+  - target: GlobelBuffer
+    type: temporal
+    permutation: MNQCRSP
+    factors: C=1 M=12 N=2 P=1 Q=3 R=1 S=1
+
+  - target: GlobelBuffer
+    type: spatial
+    permutation: MSNPCRQ
+    split: 1
+    factors: C=1 M=8 N=2 P=3 Q=1 R=1 S=2
+
+  - target: PE_buffer
+    type: temporal
+    permutation: RPQCMSN
+    factors: C=1 M=1 N=1 P=9 Q=6 R=4 S=1
+  
+  - target: PE_buffer
+    type: spatial
+    permutation: CRSPMNQ
+    split: 3
+    factors: C=3 M=1 N=1 P=2 Q=1 R=3 S=3
+

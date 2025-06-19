@@ -1,0 +1,7 @@
+mapper:
+  algorithm: random-pruned
+  optimization-metric: cycles
+  search-size: 0
+  sync-interval: 500
+  timeout: 0
+  victory-condition: 0

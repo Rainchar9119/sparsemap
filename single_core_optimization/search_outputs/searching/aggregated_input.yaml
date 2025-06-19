@@ -1,0 +1,168 @@
+architecture:
+  subtree:
+  - attributes:
+      technology: 45nm
+    local:
+    - attributes:
+        block_size: 4
+        datawidth: 16
+        metadata_datawidth: 5
+        metadata_storage_width: 5
+        width: 64
+      class: DRAM
+      name: GlobelBuffer
+      subclass: DRAM_metadata
+    name: SingleCore
+    subtree:
+    - local:
+      - attributes:
+          block_size: 1
+          data_storage_depth: 200
+          data_storage_width: 17
+          datawidth: 17
+          meshX: 8
+          meshY: 8
+          metadata_datawidth: 5
+          metadata_storage_depth: 200
+          metadata_storage_width: 5
+          n_banks: 1
+          read_bandwidth: 2
+          write_bandwidth: 2
+        class: storage
+        name: PE_buffer
+      - attributes:
+          datawidth: 16
+          meshX: 8
+          meshY: 8
+        class: mac
+        name: MACs
+      name: PE[0..63]
+  version: 0.3
+mapping:
+- factors: C=3 M=1 N=2 P=54 Q=27 R=3 S=6
+  permutation: CNQRPMS
+  target: GlobelBuffer
+  type: temporal
+- factors: C=1 M=4 N=2 P=1 Q=2 R=2 S=2
+  permutation: PNCRQMS
+  split: 5
+  target: GlobelBuffer
+  type: spatial
+- factors: C=1 M=24 N=1 P=1 Q=1 R=2 S=1
+  permutation: QNSCMRP
+  target: PE_buffer
+  type: temporal
+problem:
+  instance:
+    C: 3
+    Hdilation: 1
+    Hstride: 4
+    M: 96
+    N: 4
+    P: 54
+    Q: 54
+    R: 12
+    S: 12
+    Wdilation: 1
+    Wstride: 4
+    densities:
+      Inputs: 0.999
+      Outputs: 0.378
+      Weights: 0.710166
+  shape:
+    coefficients:
+    - default: 1
+      name: Wstride
+    - default: 1
+      name: Hstride
+    - default: 1
+      name: Wdilation
+    - default: 1
+      name: Hdilation
+    data-spaces:
+    - name: Weights
+      projection:
+      - - - C
+      - - - M
+      - - - R
+      - - - S
+    - name: Inputs
+      projection:
+      - - - N
+      - - - C
+      - - - R
+          - Wdilation
+        - - P
+          - Wstride
+      - - - S
+          - Hdilation
+        - - Q
+          - Hstride
+    - name: Outputs
+      projection:
+      - - - N
+      - - - M
+      - - - Q
+      - - - P
+      read-write: true
+    dimensions:
+    - C
+    - M
+    - R
+    - S
+    - N
+    - P
+    - Q
+    name: CNN-Layer
+sparse_optimizations:
+  targets:
+  - name: GlobelBuffer
+    representation-format:
+      data-spaces:
+      - name: Inputs
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: CP
+        - format: B
+        - format: CP
+        - format: B
+      - name: Weights
+        ranks:
+        - format: B
+        - format: CP
+        - format: B
+        - format: B
+        - format: CP
+        - format: B
+        - format: B
+        - format: B
+  - name: PE_buffer
+    representation-format:
+      data-spaces:
+      - name: Inputs
+        ranks:
+        - format: B
+      - name: Weights
+        ranks:
+        - format: B
+        - format: B
+  - action-optimization:
+    - options:
+      - condition-on:
+        - Weights
+        target: Inputs
+      type: gating
+    name: GlobelBuffer
+  - action-optimization:
+    - options:
+      - condition-on:
+        - Weights
+        target: Inputs
+      type: skipping
+    name: PE_buffer

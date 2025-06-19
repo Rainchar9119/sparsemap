@@ -1,0 +1,229 @@
+architecture:
+  subtree:
+  - attributes:
+      technology: 45nm
+    local:
+    - attributes:
+        block_size: 10
+        datawidth: 16
+        metadata_datawidth: 5
+        metadata_storage_width: 50
+        width: 160
+      class: DRAM
+      name: DRAM
+      subclass: DRAM_metadata
+    - attributes:
+        cluster-size: 1
+        data_storage_depth: 4096
+        data_storage_width: 512
+        datawidth: 8
+        metadata_storage_depth: 8192
+        metadata_storage_width: 64
+        n_banks: 2
+        n_rdwr_ports: 2
+        read_bandwidth: 42
+        write_bandwidth: 42
+      class: storage
+      name: GlobelBuffer
+      subclass: SRAM_MD
+    name: SingleCore
+    subtree:
+    - local:
+      - attributes:
+          block_size: 1
+          data_storage_depth: 100
+          data_storage_width: 32
+          datawidth: 32
+          meshX: 8
+          meshY: 32
+          metadata_datawidth: 25
+          metadata_storage_depth: 40
+          metadata_storage_width: 25
+          n_banks: 1
+        class: storage
+        name: PE_buffer
+      - attributes:
+          datawidth: 16
+          meshX: 128
+          meshY: 64
+        class: mac
+        name: MAC[0..31]
+      name: PE[0..255]
+  version: 0.3
+mapping:
+- factors: C=1 M=1 N=4 P=27 Q=1 R=1 S=3
+  permutation: CNQRPMS
+  target: DRAM
+  type: temporal
+- factors: C=3 M=2 N=1 P=2 Q=27 R=2 S=2
+  permutation: CNQRPMS
+  target: GlobelBuffer
+  type: temporal
+- factors: C=1 M=2 N=1 P=1 Q=2 R=3 S=2
+  permutation: PNCRQMS
+  split: 4
+  target: GlobelBuffer
+  type: spatial
+- factors: C=1 M=3 N=1 P=1 Q=1 R=2 S=1
+  permutation: QNSCMRP
+  target: PE_buffer
+  type: temporal
+- factors: C=1 M=8 N=1 P=1 Q=1 R=1 S=1
+  permutation: PNCRQMS
+  split: 3
+  target: PE_buffer
+  type: spatial
+problem:
+  instance:
+    C: 3
+    Hdilation: 1
+    Hstride: 4
+    M: 96
+    N: 4
+    P: 54
+    Q: 54
+    R: 12
+    S: 12
+    Wdilation: 1
+    Wstride: 4
+    densities:
+      Inputs: 0.999
+      Outputs: 0.378
+      Weights: 0.710166
+  shape:
+    coefficients:
+    - default: 1
+      name: Wstride
+    - default: 1
+      name: Hstride
+    - default: 1
+      name: Wdilation
+    - default: 1
+      name: Hdilation
+    data-spaces:
+    - name: Weights
+      projection:
+      - - - C
+      - - - M
+      - - - R
+      - - - S
+    - name: Inputs
+      projection:
+      - - - N
+      - - - C
+      - - - R
+          - Wdilation
+        - - P
+          - Wstride
+      - - - S
+          - Hdilation
+        - - Q
+          - Hstride
+    - name: Outputs
+      projection:
+      - - - N
+      - - - M
+      - - - Q
+      - - - P
+      read-write: true
+    dimensions:
+    - C
+    - M
+    - R
+    - S
+    - N
+    - P
+    - Q
+    name: CNN-Layer
+sparse_optimizations:
+  targets:
+  - name: DRAM
+    representation-format:
+      data-spaces:
+      - name: Inputs
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: CP
+        - format: B
+        - format: B
+        - format: CP
+        - format: CP
+        - format: RLE
+        - format: B
+      - name: Weights
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: RLE
+        - format: CP
+        - format: B
+  - name: GlobelBuffer
+    representation-format:
+      data-spaces:
+      - name: Inputs
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: CP
+        - format: B
+        - format: B
+        - format: CP
+        - format: CP
+        - format: RLE
+        - format: B
+      - name: Weights
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: RLE
+        - format: CP
+        - format: B
+  - name: PE_buffer
+    representation-format:
+      data-spaces:
+      - name: Inputs
+        ranks:
+        - format: B
+      - name: Weights
+        ranks:
+        - format: RLE
+        - format: CP
+        - format: B
+  - action-optimization:
+    - options:
+      - condition-on:
+        - Inputs
+        target: Weights
+      type: skipping
+    name: DRAM
+  - action-optimization:
+    - options:
+      - condition-on:
+        - Inputs
+        target: Weights
+      type: gating
+    name: GlobelBuffer
+  - action-optimization:
+    - options:
+      - condition-on:
+        - Weights
+        target: Outputs
+      type: gating
+    name: PE_buffer

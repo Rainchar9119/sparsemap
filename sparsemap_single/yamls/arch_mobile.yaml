@@ -1,0 +1,61 @@
+architecture:
+  version: 0.3
+  subtree:
+    - name: SingleCore
+      attributes: 
+        technology: 45nm
+
+      local:
+        - name: DRAM
+          class: DRAM    
+          subclass: DRAM_metadata                #cloud下总带宽是5120b
+          attributes:
+            width: 3200                       #一行一共有几个bit
+            block_size: 100                   #一行有几个word
+            datawidth: 32                    #一个word有几个bit
+            metadata_datawidth: 10
+            metadata_storage_width: 1920      ##一行一共有几个bit
+
+      subtree:
+        - name: chip
+          local:
+            - name: GlobelBuffer
+              class: storage
+              subclass: SRAM_MD
+              attributes:
+                data_storage_depth: 2500 # 65536
+                data_storage_width: 3200
+                metadata_storage_depth: 2500
+                metadata_storage_width: 1920
+                n_banks: 2
+                n_rdwr_ports: 2
+                datawidth: 32
+                cluster-size: 1
+                read_bandwidth: 8          #number of words per cycle
+                write_bandwidth: 8         #number of words per cycle
+
+          subtree:
+            - name: PE[0..255]
+              local:
+                - name: PE_buffer
+                  class: storage
+                  attributes:
+                    data_storage_depth: 500
+                    data_storage_width: 320
+                    metadata_datawidth: 10
+                    metadata_storage_width: 190
+                    metadata_storage_depth: 500
+                    n_banks: 3
+                    datawidth: 32
+                    block_size: 1
+                    #read_bandwidth: 2
+                    #write_bandwidth: 2
+                    meshX: 16
+                    meshY: 16
+            
+                - name: MAC[0..63]
+                  class: mac
+                  attributes:
+                    meshX: 512
+                    meshY: 32
+                    datawidth: 32

@@ -1,0 +1,23 @@
+architecture_constraints:
+  targets:
+  
+    - target: GlobelBuffer
+      type: bypass
+      
+      bypass: []
+      keep: []
+      
+  
+    - target: PE_buffer
+      type: bypass
+      
+      bypass: []
+      keep: []
+      
+  
+    - target: PE_buffer
+      type: spatial
+      
+      factors: M=32
+      
+  

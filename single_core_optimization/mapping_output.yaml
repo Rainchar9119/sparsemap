@@ -1,0 +1,18 @@
+# template.j2
+
+mapping:
+  - target: GlobelBuffer
+    type: temporal
+    permutation: CNQRPMS
+    factors: C=3 M=1 N=2 P=54 Q=27 R=3 S=6
+
+  - target: GlobelBuffer
+    type: spatial
+    permutation: PNCRQMS
+    split: 5
+    factors: C=1 M=4 N=2 P=1 Q=2 R=2 S=2
+
+  - target: PE_buffer
+    type: temporal
+    permutation: QNSCMRP
+    factors: C=1 M=24 N=1 P=1 Q=1 R=2 S=1

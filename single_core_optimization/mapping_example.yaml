@@ -1,0 +1,20 @@
+mapping:
+  - target: GlobelBuffer
+    type: temporal
+    permutation: RSP CMNQ
+    factors: R=1 S=1 P=4 C=3 M=96 N=4 Q=4
+
+  - target: GlobelBuffer
+    type: spatial
+    split: 4
+    permutation: NPQR SCM
+    factors: N=1 M=1 C=1 P=2 Q=1 R=1 S=1
+
+
+  - target: PE_buffer
+    type: temporal
+    factors: N=1 P=7 Q=14 R=11 S=11 C=1 M=1
+    permutation: NMCPQRS
+  
+
+

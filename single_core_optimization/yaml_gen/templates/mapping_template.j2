@@ -1,0 +1,18 @@
+# template.j2
+
+mapping:
+  - target: {{ 'GlobelBuffer' }}
+    type: {{ 'temporal' }}
+    permutation: {{ permutation_GB_T }}
+    factors: {{ factors_GB_T }}
+
+  - target: {{ 'GlobelBuffer' }}
+    type: {{ 'spatial' }}
+    permutation: {{ permutation_GB_S }}
+    split: {{ split_GB_to_PE }}
+    factors: {{ factors_GB_S }}
+
+  - target: {{ 'PE_buffer' }}
+    type: {{ 'temporal' }}
+    permutation: {{ permutation_PEB_T }}
+    factors: {{ factors_PEB_T }}

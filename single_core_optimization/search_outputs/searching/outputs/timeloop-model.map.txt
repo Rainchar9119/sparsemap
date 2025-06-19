@@ -1,0 +1,20 @@
+
+GlobelBuffer [ Weights:41472 (29453) Inputs:602112 (601510) Outputs:1119744 (1119744) ] 
+---------------------------------------------------------------------------------------
+| for S in [0:6)
+|   for P in [0:54)
+|     for R in [0:3)
+|       for Q in [0:27)
+|         for N in [0:2)
+|           for C in [0:3)
+|             for S in [0:2) (Spatial-Y)
+|               for M in [0:4) (Spatial-Y)
+|                 for Q in [0:2) (Spatial-X)
+|                   for R in [0:2) (Spatial-X)
+|                     for N in [0:2) (Spatial-X)
+
+PE_buffer [ Weights:48 (35) Inputs:2 (2) Outputs:24 (24) ] 
+----------------------------------------------------------
+|                       for R in [0:2)
+|                         for M in [0:24)
+

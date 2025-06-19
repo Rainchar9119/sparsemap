@@ -1,0 +1,95 @@
+architecture:
+  subtree:
+  - attributes:
+      technology: 45nm
+    local:
+    - attributes:
+        block_size: 100
+        datawidth: 32
+        metadata_datawidth: 10
+        metadata_storage_width: 1920
+        width: 3200
+      class: DRAM
+      name: DRAM
+      subclass: DRAM_metadata
+    name: SingleCore
+    subtree:
+    - local:
+      - attributes:
+          cluster-size: 1
+          data_storage_depth: 2500
+          data_storage_width: 3200
+          datawidth: 32
+          metadata_storage_depth: 2500
+          metadata_storage_width: 1920
+          n_banks: 2
+          n_rdwr_ports: 2
+          read_bandwidth: 8
+          write_bandwidth: 8
+        class: storage
+        name: GlobelBuffer
+        subclass: SRAM_MD
+      name: chip
+      subtree:
+      - local:
+        - attributes:
+            block_size: 1
+            data_storage_depth: 500
+            data_storage_width: 320
+            datawidth: 32
+            meshX: 16
+            meshY: 16
+            metadata_datawidth: 10
+            metadata_storage_depth: 500
+            metadata_storage_width: 190
+            n_banks: 3
+          class: storage
+          name: PE_buffer
+        - attributes:
+            datawidth: 32
+            meshX: 512
+            meshY: 32
+          class: mac
+          name: MAC[0..63]
+        name: PE[0..255]
+  version: 0.3
+mapper:
+  algorithm: random
+  num-threads: 5
+  optimization-metric: edp
+  search-size: 5000
+  sync-interval: 5
+  timeout: 0
+  victory-condition: 0
+problem:
+  instance:
+    K: 49152
+    M: 2016
+    N: 12288
+    densities:
+      A:
+        density: 0.99
+        distribution: fixed-structured
+      B:
+        density: 0.5
+        distribution: fixed-structured
+  shape:
+    data-spaces:
+    - name: A
+      projection:
+      - - - M
+      - - - K
+    - name: B
+      projection:
+      - - - N
+      - - - K
+    - name: Z
+      projection:
+      - - - M
+      - - - N
+      read-write: true
+    dimensions:
+    - M
+    - N
+    - K
+    name: MatrixMultiply

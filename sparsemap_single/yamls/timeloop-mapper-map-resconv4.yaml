@@ -1,0 +1,55 @@
+mapping:
+  - target: PE_buffer
+    type: datatype
+    keep:
+      []
+    bypass:
+      - Weights
+      - Inputs
+      - Outputs
+    stream:
+      []
+  - target: GlobelBuffer
+    type: datatype
+    keep:
+      []
+    bypass:
+      - Weights
+      - Inputs
+      - Outputs
+    stream:
+      []
+  - target: DRAM
+    type: datatype
+    keep:
+      - Weights
+      - Inputs
+      - Outputs
+    bypass:
+      []
+    stream:
+      - Weights
+      - Inputs
+      - Outputs
+  - target: PE_buffer
+    type: spatial
+    factors: C1 M32 R1 S1 N1 P1 Q2
+    permutation: MQCRSNP
+    split: 1
+  - target: PE_buffer
+    type: temporal
+    factors: C4 M2 R3 S1 N1 P4 Q4
+    permutation: MQRCPSN
+  - target: GlobelBuffer
+    type: spatial
+    factors: C32 M1 R1 S1 N1 P4 Q2
+    permutation: QPCMRSN
+    split: 2
+  - target: GlobelBuffer
+    type: temporal
+    factors: C1 M2 R1 S3 N1 P1 Q1
+    permutation: MSCRNPQ
+  - target: DRAM
+    type: temporal
+    factors: C1 M1 R1 S1 N1 P1 Q1
+    permutation: CMRSNPQ

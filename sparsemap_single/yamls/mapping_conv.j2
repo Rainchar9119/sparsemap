@@ -1,0 +1,50 @@
+# template.j2
+
+mapping:
+  - target: {{ 'DRAM' }}
+    type: {{ 'temporal' }}
+    permutation: {{ permutation_DRAM_T }}
+    factors: {{ factors_DRAM_T }}
+
+  - target: {{ 'GlobelBuffer' }}
+    type: {{ 'temporal' }}
+    permutation: {{ permutation_GB_T }}
+    factors: {{ factors_GB_T }}
+
+  - target: {{ 'GlobelBuffer' }}
+    type: {{ 'spatial' }}
+    permutation: {{ permutation_GB_S }}
+    split: {{ split_DRAM_to_GB }}
+    factors: {{ factors_GB_S }}
+
+  - target: {{ 'PE_buffer' }}
+    type: {{ 'temporal' }}
+    permutation: {{ permutation_PEB_T }}
+    factors: {{ factors_PEB_T }}
+
+  - target: {{ 'PE_buffer' }}
+    type: {{ 'spatial' }}
+    permutation: {{ permutation_PEB_S }}
+    split: {{ split_GB_to_PEB }}
+    factors: {{ factors_PEB_S }}
+
+  {% if iwo_GB %}
+  - target: {{ 'GlobelBuffer' }}
+    type: {{ 'datatype' }}
+    bypass:
+      {% for item in iwo_GB %}
+        - {{ item }}
+      {% endfor %}
+  {%endif%}
+
+  {% if iwo_PEB %}
+  - target: {{ 'PE_buffer' }}
+    type: {{ 'datatype' }}
+    bypass:
+      {% for item in iwo_PEB %}
+        - {{ item }}
+      {% endfor %}
+  {%endif%}
+
+
+  

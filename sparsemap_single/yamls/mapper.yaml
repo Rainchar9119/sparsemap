@@ -1,0 +1,8 @@
+mapper:
+  algorithm: random
+  num-threads: 5
+  optimization-metric: edp
+  search-size: 5000
+  sync-interval: 5
+  timeout: 0
+  victory-condition: 0

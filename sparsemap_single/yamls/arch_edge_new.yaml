@@ -1,0 +1,61 @@
+architecture:
+  version: 0.3
+  subtree:
+    - name: SingleCore
+      attributes: 
+        technology: 45nm
+
+      local:
+        - name: DRAM
+          class: DRAM
+          subclass: DRAM_metadata
+          attributes:
+            width: 160
+            block_size: 10
+            datawidth: 16
+            metadata_datawidth: 5
+            metadata_storage_width: 50
+
+      subtree:
+        - name: chip
+          local:
+            - name: GlobelBuffer
+              class: storage
+              subclass: SRAM_MD
+              attributes:
+                data_storage_depth: 4096 # 65536
+                data_storage_width: 512
+                metadata_storage_depth: 8192
+                metadata_storage_width: 64
+                n_banks: 2
+                n_rdwr_ports: 2
+                datawidth: 8
+                cluster-size: 1
+                read_bandwidth: 42
+                write_bandwidth: 42
+
+          subtree:
+            - name: PE[0..255]
+              local:
+                - name: PE_buffer
+                  class: storage
+                  attributes:
+                    data_storage_depth: 128
+                    data_storage_width: 32
+                    metadata_datawidth: 6
+                    metadata_storage_width: 30
+                    metadata_storage_depth: 40
+                    n_banks: 1
+                    datawidth: 32
+                    block_size: 1
+                    #read_bandwidth: 2
+                    #write_bandwidth: 2
+                    meshX: 8
+                    meshY: 32
+            
+                - name: MAC[0..63]
+                  class: mac
+                  attributes:
+                    meshX: 256
+                    meshY: 64
+                    datawidth: 16

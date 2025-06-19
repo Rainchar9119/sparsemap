@@ -1,0 +1,172 @@
+architecture:
+  subtree:
+  - attributes:
+      technology: 45nm
+    local:
+    - attributes:
+        block_size: 100
+        datawidth: 32
+        metadata_datawidth: 10
+        metadata_storage_width: 1920
+        width: 3200
+      class: DRAM
+      name: DRAM
+      subclass: DRAM_metadata
+    name: SingleCore
+    subtree:
+    - local:
+      - attributes:
+          cluster-size: 1
+          data_storage_depth: 100
+          data_storage_width: 3200
+          datawidth: 32
+          metadata_storage_depth: 100
+          metadata_storage_width: 1920
+          n_banks: 2
+          n_rdwr_ports: 2
+          read_bandwidth: 8
+          write_bandwidth: 8
+        class: storage
+        name: GlobelBuffer
+        subclass: SRAM_MD
+      name: chip
+      subtree:
+      - local:
+        - attributes:
+            block_size: 1
+            data_storage_depth: 20
+            data_storage_width: 320
+            datawidth: 32
+            meshX: 16
+            meshY: 8
+            metadata_datawidth: 10
+            metadata_storage_depth: 20
+            metadata_storage_width: 190
+            n_banks: 3
+          class: storage
+          name: PE_buffer
+        - attributes:
+            datawidth: 32
+            meshX: 16
+            meshY: 16
+          class: mac
+          name: MAC[0..1]
+        name: PE[0..127]
+  version: 0.3
+mapping:
+- factors: M=1 K=32 N=16
+  permutation: MNK
+  target: DRAM
+  type: temporal
+- factors: M=84 K=48 N=48
+  permutation: KMN
+  target: GlobelBuffer
+  type: temporal
+- factors: M=12 K=2 N=8
+  permutation: NKM
+  split: 2
+  target: GlobelBuffer
+  type: spatial
+- factors: M=2 K=16 N=1
+  permutation: KMN
+  target: PE_buffer
+  type: temporal
+- factors: M=1 K=1 N=2
+  permutation: MNK
+  split: 0
+  target: PE_buffer
+  type: spatial
+- bypass:
+  - A
+  - Z
+  target: PE_buffer
+  type: datatype
+problem:
+  instance:
+    K: 49152
+    M: 2016
+    N: 12288
+    densities:
+      A:
+        density: 0.99
+        distribution: fixed-structured
+      B:
+        density: 0.5
+        distribution: fixed-structured
+  shape:
+    data-spaces:
+    - name: A
+      projection:
+      - - - M
+      - - - K
+    - name: B
+      projection:
+      - - - N
+      - - - K
+    - name: Z
+      projection:
+      - - - M
+      - - - N
+      read-write: true
+    dimensions:
+    - M
+    - N
+    - K
+    name: MatrixMultiply
+sparse_optimizations:
+  targets:
+  - name: DRAM
+    representation-format:
+      data-spaces:
+      - name: A
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: B
+        - format: RLE
+        - format: RLE
+        - format: RLE
+        - format: RLE
+      - name: B
+        ranks:
+        - format: UOP
+        - format: UOP
+        - format: UOP
+        - format: RLE
+        - format: B
+        - format: RLE
+        - format: B
+        - format: RLE
+  - name: GlobelBuffer
+    representation-format:
+      data-spaces:
+      - name: A
+        ranks:
+        - format: UOP
+        - format: B
+        - format: RLE
+        - format: RLE
+        - format: RLE
+        - format: RLE
+      - name: B
+        ranks:
+        - format: UOP
+        - format: RLE
+        - format: B
+        - format: RLE
+        - format: B
+        - format: RLE
+  - name: PE_buffer
+    representation-format:
+      data-spaces:
+      - name: A
+        ranks:
+        - format: RLE
+        - format: RLE
+      - name: B
+        ranks:
+        - format: B
+        - format: RLE
+  - compute-optimization:
+    - type: skipping
+    name: MAC

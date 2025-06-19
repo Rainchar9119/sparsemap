@@ -1,0 +1,134 @@
+
+sparse_optimizations:
+  targets:
+    - name: DRAM
+      representation-format:
+        data-spaces:
+          - name: Inputs    # N C P Q R S
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: B
+              - format: CP
+                payload-word-bits: 2
+
+                
+          - name: Weights  # C S R M
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: CP  
+              - format: CP
+              - format: CP
+              - format: CP
+              - format: B
+                #payload-word-bits: 6
+
+          
+                
+    - name: GlobelBuffer
+      representation-format:
+        data-spaces:
+          - name: Inputs    # N C P Q R S
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: B
+              - format: CP
+                #payload-word-bits: 5
+                
+          - name: Weights  # C S R M
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: CP  
+              - format: CP
+              - format: CP
+              - format: CP
+              - format: B
+            
+    
+
+    - name: PE_buffer
+      representation-format:
+        data-spaces:
+          - name: Inputs      # N C P Q R S
+            ranks:
+              #- format: B
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: UOP
+              - format: B
+                #metadata-word-bits: 5
+              - format: CP
+                #payload-word-bits: 5
+              
+
+          - name: Weights      # C S R M
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP  
+              - format: CP     
+              - format: CP
+              - format: CP
+              - format: CP
+              - format: B
+          
+    
+
+
+    
+
+    - name: MAC
+      compute-optimization:
+      - type: gating

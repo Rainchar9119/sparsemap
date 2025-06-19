@@ -1,0 +1,12 @@
+architecture_constraints:
+  targets:
+  {% for target in targets %}
+    - target: {{ target.target }}
+      type: {{ target.type }}
+      {% if target.type == 'bypass' %}
+      bypass: {{ target.bypass }}
+      keep: {{ target.keep }}
+      {% elif target.type == 'spatial' %}
+      factors: {{ target.factors }}
+      {% endif %}
+  {% endfor %}

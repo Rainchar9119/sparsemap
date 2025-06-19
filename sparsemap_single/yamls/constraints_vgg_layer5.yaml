@@ -1,0 +1,31 @@
+architecture_constraints:
+  targets:
+  
+    - target: GlobelBuffer
+      type: bypass
+      
+      bypass: []
+      keep: []
+      
+  
+    - target: PE_buffer
+      type: bypass
+      
+      bypass: []
+      keep: []
+
+    - target: DRAM
+      type: temporal
+      permutation: QMCRSNP
+
+    
+
+    - target: GlobelBuffer
+      type: temporal
+      permutation: CQMRSNP
+      
+    - target: PE_buffer
+      type: temporal
+      permutation: SRCQPMN
+
+

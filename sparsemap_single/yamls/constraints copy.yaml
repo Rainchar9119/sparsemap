@@ -1,0 +1,20 @@
+architecture_constraints:
+  targets:
+  # certain buffer only stores certain datatypes
+  - target: GlobelBuffer
+    type: bypass
+    bypass: []
+    keep: [Weights]
+
+  - target: PE_buffer
+    type: bypass
+    bypass: []
+    keep: [Weights]
+
+  - target: PE_buffer
+    type: spatial
+    factors: M = 32
+
+  - target: GlobelBuffer
+    type: spatial
+    factors: C = 32

@@ -1,0 +1,87 @@
+
+sparse_optimizations:
+  targets:
+    - name: GlobelBuffer
+      representation-format:
+        data-spaces:
+          - name: Inputs    # N C P Q R S
+            ranks:
+              #- format: UOP
+              - format: UOP
+              - format: UOP
+              - format: B
+              - format: CP
+              - format: B
+              - format: CP
+              - format: CP
+              - format: RLE
+              - format: B
+                
+          - name: Weights  # C S R M
+            ranks:
+              
+              #- format: UOP
+              #- format: UOP  
+              - format: UOP
+              - format: RLE
+              - format: CP
+              - format: B
+
+          
+                
+                
+    
+
+    - name: PE_buffer
+      representation-format:
+        data-spaces:
+          - name: Inputs      # N C P Q R S
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP
+              #- format: B
+              - format: CP
+              - format: CP
+              - format: RLE
+              - format: B
+              
+
+          - name: Weights      # C S R M
+            ranks:
+              #- format: UOP
+              #- format: UOP
+              #- format: UOP  
+              #- format: UOP     
+              #- format: UOP
+              #- format: RLE
+              - format: CP
+              - format: B
+          
+ 
+
+    - name: GlobelBuffer
+      action-optimization:
+        - type: gating
+          options:
+            - target: Weights
+              condition-on: [ Inputs ]
+
+
+#    - name: PE_buffer
+#      action-optimization:
+#       - type: gating
+#          options:
+#            - target: Outputs
+#              condition-on: [ Inputs ]
+   
+    - name: PE_buffer
+      action-optimization:
+        - type: gating
+          options:
+            - target: Outputs
+              condition-on: [ Weights ]
+
+#    - name: MAC
+#      compute-optimization:
+#      - type: gating

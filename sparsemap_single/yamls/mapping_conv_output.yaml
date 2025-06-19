@@ -1,0 +1,43 @@
+# template.j2
+
+mapping:
+  - target: DRAM
+    type: temporal
+    permutation: NMK
+    factors: M=1 K=4 N=3
+
+  - target: GlobelBuffer
+    type: temporal
+    permutation: KMN
+    factors: M=14 K=4 N=32
+
+  - target: GlobelBuffer
+    type: spatial
+    permutation: KNM
+    split: 1
+    factors: M=4 K=16 N=8
+
+  - target: PE_buffer
+    type: temporal
+    permutation: KNM
+    factors: M=36 K=48 N=8
+
+  - target: PE_buffer
+    type: spatial
+    permutation: MNK
+    split: 2
+    factors: M=1 K=4 N=2
+
+  
+  - target: GlobelBuffer
+    type: datatype
+    bypass:
+      
+        - Z
+      
+  
+
+  
+
+
+  

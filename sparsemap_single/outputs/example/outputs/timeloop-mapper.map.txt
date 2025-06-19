@@ -1,0 +1,21 @@
+
+DRAM [ A:99090432 (99090432) B:603979776 (603979776) Z:24772608 (24772608) ] 
+----------------------------------------------------------------------------
+| for M in [0:28)
+
+GlobelBuffer [ ] 
+----------------
+|   for M in [0:6)
+|     for K in [0:1024)
+|       for N in [0:8) (Spatial-Y)
+|         for M in [0:2) (Spatial-Y)
+|           for K in [0:12) (Spatial-X)
+
+PE_buffer [ ] 
+-------------
+|             for N in [0:384)
+|               for M in [0:3)
+|                 for K in [0:4) (Spatial-X)
+|                   for N in [0:4) (Spatial-X)
+|                     for M in [0:2) (Spatial-X)
+

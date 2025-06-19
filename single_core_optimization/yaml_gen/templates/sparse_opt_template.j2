@@ -1,0 +1,26 @@
+# template.j2
+sparse_optimizations:
+  targets:
+  {% for target in data[0] %}
+    - name: {{ target['name'] }}
+      representation-format:
+        data-spaces:
+        {% for data_space in target['representation-format']['data-spaces'] %}
+          - name: {{ data_space['name'] }}
+            ranks:
+            {% for rank in data_space['ranks'] %}
+              - format: {{ rank['format'] }}
+            {% endfor %}
+        {% endfor %}
+  {% endfor %}
+
+  {% for target in data[1] %}
+    - name: {{ target['name'] }}
+      action-optimization:
+        - type: {{ target['type'] }}
+          options:
+            - target: {{ target['target'] }}
+              condition-on: {{ target['condition_on'] }}
+  {% endfor %}
+
+

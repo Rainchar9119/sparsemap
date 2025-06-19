@@ -1,0 +1,26 @@
+architecture_constraints:
+  targets:
+  
+    - target: GlobelBuffer
+      type: bypass
+      
+      bypass: []
+      keep: []
+      
+  
+    - target: PE_buffer
+      type: bypass
+      
+      bypass: []
+      keep: []
+
+    - target: DRAM
+      type: temporal
+      permutation: MKN
+
+    - target: GlobelBuffer
+      type: temporal
+      permutation: MKN
+      
+
+

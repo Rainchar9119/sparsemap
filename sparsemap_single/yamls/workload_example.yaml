@@ -1,0 +1,62 @@
+problem:
+  instance:
+    C: 3     #输入通道
+    Hdilation: 1         
+    Hstride: 4         #纵向步长
+    M: 96              #卷积核个数 = 输出通道数
+    N: 4                  #batch
+    P: 54              #输出的长宽
+    Q: 54              
+    R: 12              #卷积核长宽
+    S: 12
+    Wdilation: 1
+    Wstride: 4
+    densities:
+      Inputs: 0.25
+      Weights: 0.5
+      Outputs: 0.5
+  shape:
+    coefficients:
+    - default: 1
+      name: Wstride
+    - default: 1
+      name: Hstride
+    - default: 1
+      name: Wdilation
+    - default: 1
+      name: Hdilation
+    data-spaces:
+    - name: Weights
+      projection:
+      - - - C
+      - - - M
+      - - - R
+      - - - S
+    - name: Inputs
+      projection:
+      - - - N
+      - - - C
+      - - - R
+          - Wdilation
+        - - P
+          - Wstride
+      - - - S
+          - Hdilation
+        - - Q
+          - Hstride
+    - name: Outputs
+      projection:
+      - - - N
+      - - - M
+      - - - Q
+      - - - P
+      read-write: true
+    dimensions:
+    - C
+    - M
+    - R
+    - S
+    - N
+    - P
+    - Q
+    name: CNN-Layer

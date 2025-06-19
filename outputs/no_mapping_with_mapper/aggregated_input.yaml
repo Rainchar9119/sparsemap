@@ -1,0 +1,369 @@
+architecture:
+  subtree:
+  - attributes:
+      technology: 45nm
+    local:
+    - attributes:
+        data_storage_depth: 16384
+        data_storage_width: 64
+        datawidth: 8
+        metadata_storage_depth: 16384
+        metadata_storage_width: 28
+        read_bandwidth: 8
+      class: storage
+      name: BackingStorage
+      subclass: SRAM_MD
+    name: system
+    subtree:
+    - local:
+      - attributes:
+          block_size: 1
+          data_storage_depth: 512
+          data_storage_width: 8
+          datawidth: 8
+          metadata_n_banks: 2
+          metadata_storage_depth: 256
+          metadata_storage_width: 28
+          n_banks: 2
+          read_bandwidth: 2
+          write_bandwidth: 2
+        class: storage
+        name: Buffer
+        subclass: SRAM_MD
+      - attributes:
+          data_storage_depth: 1
+          data_storage_width: 8
+          datawidth: 8
+          read_bandwidth: 1
+          write_bandwidth: 1
+        class: storage
+        name: Reg
+        subclass: reg
+      - attributes:
+          datawidth: 8
+        class: compute
+        name: MAC
+        subclass: intmac
+      name: PE
+  version: 0.3
+compound_components:
+  classes:
+  - actions:
+    - name: write
+      subcomponents:
+      - actions:
+        - name: write
+        name: storage
+    - name: read
+      subcomponents:
+      - actions:
+        - name: read
+        name: storage
+    - name: gated_write
+      subcomponents:
+      - actions:
+        - name: idle
+        name: storage
+    - name: gated_read
+      subcomponents:
+      - actions:
+        - name: idle
+        name: storage
+    - name: metadata_read
+      subcomponents:
+      - actions:
+        - name: read
+        name: metadata_storage
+    - name: metadata_write
+      subcomponents:
+      - actions:
+        - name: write
+        name: metadata_storage
+    - name: gated_metadata_read
+      subcomponents:
+      - actions:
+        - name: idle
+        name: metadata_storage
+    - name: gated_metadata_write
+      subcomponents:
+      - actions:
+        - name: idle
+        name: metadata_storage
+    attributes:
+      ag_datawidth: log(data_storage_depth)
+      counter_width: 0
+      data_storage_depth: must_specify
+      data_storage_width: must_specify
+      metadata_storage_depth: 0
+      metadata_storage_width: 0
+      n_banks: 1
+      n_rdwr_ports: 2
+      phy_datawidth: data_storage_width
+      phy_metadata_datawidth: metadata_storage_width
+      technology: must_specify
+    name: SRAM_MD
+    subcomponents:
+    - attributes:
+        datawidth: phy_datawidth
+        depth: data_storage_depth
+        n_banks: n_banks
+        n_rdwr_ports: n_rdwr_ports
+        technology: technology
+        width: data_storage_width
+      class: SRAM
+      name: storage
+    - attributes:
+        datawidth: phy_metadata_datawidth
+        depth: metadata_storage_depth
+        technology: technology
+        width: metadata_storage_width
+      class: SRAM
+      name: metadata_storage
+  - actions:
+    - name: write
+      subcomponents:
+      - actions:
+        - name: write
+        name: storage
+    - name: read
+      subcomponents:
+      - actions:
+        - name: read
+        name: storage
+    - name: gated_write
+      subcomponents:
+      - actions:
+        - name: idle
+        name: storage
+    - name: gated_read
+      subcomponents:
+      - actions:
+        - name: idle
+        name: storage
+    - name: metadata_read
+      subcomponents:
+      - actions:
+        - name: read
+        name: metadata_storage
+    - name: metadata_write
+      subcomponents:
+      - actions:
+        - name: write
+        name: metadata_storage
+    - name: gated_metadata_read
+      subcomponents:
+      - actions:
+        - name: idle
+        name: metadata_storage
+    - name: gated_metadata_write
+      subcomponents:
+      - actions:
+        - name: idle
+        name: metadata_storage
+    attributes:
+      ag_datawidth: log(data_storage_depth)
+      counter_width: 0
+      data_storage_width: must_specify
+      metadata_storage_width: 0
+      n_banks: 1
+      n_rdwr_ports: 2
+      phy_datawidth: data_storage_width
+      phy_metadata_datawidth: metadata_storage_width
+      physical_data_storage_depth: must_specify
+      physical_metadata_storage_depth: 0
+      technology: must_specify
+    name: SRAM_MD_hack
+    subcomponents:
+    - attributes:
+        datawidth: phy_datawidth
+        depth: physical_data_storage_depth
+        n_banks: n_banks
+        n_rdwr_ports: n_rdwr_ports
+        technology: technology
+        width: data_storage_width
+      class: SRAM
+      name: storage
+    - attributes:
+        datawidth: phy_metadata_datawidth
+        depth: physical_metadata_storage_depth
+        technology: technology
+        width: metadata_storage_width
+      class: SRAM
+      name: metadata_storage
+  - actions:
+    - name: mac_random
+      subcomponents:
+      - actions:
+        - name: multiply_random
+        name: multiplier
+      - actions:
+        - name: add
+        name: adder
+    - name: mac_gated
+      subcomponents:
+      - actions:
+        - name: idle
+        name: multiplier
+      - actions:
+        - name: idle
+        name: adder
+    - name: mac_skipped
+      subcomponents:
+      - actions:
+        - name: idle
+        name: multiplier
+      - actions:
+        - name: idle
+        name: adder
+    attributes:
+      datawidth: must_specify
+      technology: must_specify
+    name: Imac
+    subcomponents:
+    - attributes:
+        datawidth: datawidth
+        technology: technology
+      class: intmultiplier
+      name: multiplier
+    - attributes:
+        datawidth: datawidth
+        technology: technology
+      class: intadder
+      name: adder
+  - actions:
+    - name: mac_random
+      subcomponents:
+      - actions:
+        - name: multiply_random
+        name: multiplier
+      - actions:
+        - name: add
+        name: adder
+      - actions:
+        - name: adder
+        name: decoder
+    - name: mac_gated
+      subcomponents:
+      - actions:
+        - name: idle
+        name: multiplier
+      - actions:
+        - name: idle
+        name: adder
+    - name: mac_skipped
+      subcomponents:
+      - actions:
+        - name: idle
+        name: multiplier
+      - actions:
+        - name: idle
+        name: adder
+    attributes:
+      datawidth: must_specify
+      decoder_width: must_specify
+      technology: must_specify
+    name: Imac_Decoder
+    subcomponents:
+    - attributes:
+        datawidth: datawidth
+        technology: technology
+      class: intmultiplier
+      name: multiplier
+    - attributes:
+        datawidth: datawidth
+        technology: technology
+      class: intadder
+      name: adder
+    - attributes:
+        datawidth: decoder_width
+        technology: technology
+      class: intadder
+      name: decoder
+  - actions:
+    - name: mac_random
+      subcomponents:
+      - actions:
+        - name: multiply_random
+        name: multiplier
+      - actions:
+        - name: add
+        name: adder
+    - name: mac_gated
+      subcomponents:
+      - actions:
+        - name: idle
+        name: multiplier
+      - actions:
+        - name: idle
+        name: adder
+    - name: mac_skipped
+      subcomponents:
+      - actions:
+        - name: idle
+        name: multiplier
+      - actions:
+        - name: idle
+        name: adder
+    attributes:
+      exponent: 5
+      mantissa: 10
+      sign: 1
+      technology: must_specify
+    name: Fmac
+    subcomponents:
+    - attributes:
+        exponent: exponent
+        mantissa: mantissa
+        sign: sign
+        technology: technology
+      class: fpmultiplier
+      name: multiplier
+    - attributes:
+        exponent: exponent
+        mantissa: mantissa
+        sign: sign
+        technology: technology
+      class: fpadder
+      name: adder
+  version: 0.3
+mapper:
+  algorithm: random-pruned
+  live-status: false
+  num-threads: 64
+  optimization-metrics:
+  - delay
+  - energy
+  timeout: 0
+  victory-condition: 0
+problem:
+  instance:
+    K: 128
+    M: 128
+    N: 128
+    densities:
+      A:
+        density: 0.55
+        distribution: fixed-structured
+      B:
+        density: 0.35
+        distribution: fixed-structured
+  shape:
+    data-spaces:
+    - name: A
+      projection:
+      - - - M
+      - - - K
+    - name: B
+      projection:
+      - - - N
+      - - - K
+    - name: Z
+      projection:
+      - - - M
+      - - - N
+      read-write: true
+    dimensions:
+    - M
+    - N
+    - K
+    name: MatrixMultiply

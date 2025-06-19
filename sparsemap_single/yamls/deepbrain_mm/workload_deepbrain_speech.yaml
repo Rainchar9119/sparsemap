@@ -1,0 +1,32 @@
+problem:
+  instance:
+    K: 2592
+    M: 7680
+    N: 7680
+    densities:
+      A:
+        density: 0.05
+        distribution: fixed-structured
+      B:
+        density: 0.05
+        distribution: fixed-structured
+  shape:
+    data-spaces:
+    - name: A
+      projection:
+      - - - M
+      - - - K
+    - name: B
+      projection:
+      - - - N
+      - - - K
+    - name: Z
+      projection:
+      - - - M
+      - - - N
+      read-write: true
+    dimensions:
+    - M
+    - N
+    - K
+    name: MatrixMultiply

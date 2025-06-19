@@ -1,0 +1,115 @@
+# template.j2
+
+sparse_optimizations:
+  targets:
+    
+    - name: GlobelBuffer
+      
+      representation-format:
+        data-spaces:
+          
+            - name: Inputs
+              ranks:
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+          
+            - name: Weights
+              ranks:
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+
+                  - format: UOP
+                
+          
+      
+      
+    
+    - name: PE_buffer
+      
+      representation-format:
+        data-spaces:
+          
+            - name: Inputs
+              ranks:
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+          
+            - name: Weights
+              ranks:
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: UOP
+                
+                  - format: CP
+                
+                  - format: CP
+                
+          
+      
+      
+      action-optimization:
+        
+          - type: gating
+            options:
+  
+                - target: Weights
+                  condition-on: [Inputs]
+              
+        
+      
+    
